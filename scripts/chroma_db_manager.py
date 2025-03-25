@@ -5,7 +5,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 class ChromaDBManager:
     def __init__(self, path="../chroma_db"):
         self.db_path = path
-        self.embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        self.embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2") # sentence transformer model - this model is small and fast
         self.collections = {}
 
     # Create collection in chroma database with collection name - ex: pdf_chunks
@@ -33,7 +33,7 @@ class ChromaDBManager:
             print(f"[+] Loaded collection '{collection_name}' from disk.")
             return db
             
-    # add documents into existing collection 
+    # add documents into existing collection - need to specify collection name 
     def add_documents_to_collection(self, collection_name, documents):
         if collection_name not in self.collections:
             raise ValueError(f"Collection '{collection_name}' not found. Create it first.")
