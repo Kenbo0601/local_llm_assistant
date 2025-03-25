@@ -8,6 +8,6 @@ A lightweight RAG-based assistant using ChromaDB as a local vector store and Sen
 - Easy to plug in OpenAI or local LLMs
 
 ## Usage
-1. Put your `.txt` files into `data/`
+1. Put your `.txt`,`.db` files into `data/`
 2. Run `scripts/loader.py` to load them
 3. Use `app.py` to query your assistant
