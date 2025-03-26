@@ -13,13 +13,13 @@ A lightweight RAG-based assistant using ChromaDB as a local vector store and Sen
 3. Use `app.py` to query your assistant
 
 
-# 🔁 High-Level Workflow: Retrieval-Augmented Generation (RAG)
+# High-Level Workflow: Retrieval-Augmented Generation (RAG)
 
 This project uses a modular RAG pipeline to generate SQL queries based on user questions and database schemas. Below is the step-by-step flow of how each component interacts:
 
 ---
 
-## 🚀 Step-by-Step Flow
+## Step-by-Step Flow
 
 1. **User Prompt (app.py)**
    - The user selects a `.db` file (e.g. `sakila.db`)
@@ -61,7 +61,7 @@ This project uses a modular RAG pipeline to generate SQL queries based on user q
 
 ---
 
-## 🧩 Component Relationship Diagram
+## Component Relationship Diagram
 
 ```text
 app.py
