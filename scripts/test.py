@@ -1,8 +1,18 @@
 from loader import DocumentLoader
-from chroma_db_manager import ChromaDBManager
+from chroma_db_manager import ChromaDBManager, SQLSchemaManager
 
 doc_loader = DocumentLoader()
-doc_loader.load_schema("sqlite-sakila.db")
+schema_docs = doc_loader.load_schema("sqlite-sakila.db")
+
+manager = SQLSchemaManager()
+print(manager.list_tables('sakila'))
+
+attrs = manager.list_table_attributes("sakila")
+for table, cols in attrs.items():
+    print(f"{table}: {cols}")
+
+#manager.create_collection("sakila")
+#manager.add_schema_to_collection("sakila", schema_docs)
 
 '''
 doc_loader = DocumentLoader()

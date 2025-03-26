@@ -2,3 +2,4 @@ chromadb
 sentence-transformers
 langchain
 langchain-community
+streamlit

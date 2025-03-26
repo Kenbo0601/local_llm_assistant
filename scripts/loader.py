@@ -5,16 +5,6 @@ from langchain_community.vectorstores import Chroma
 import sqlite3
 import os 
 
-#embedding = HuggingFaceBgeEmbeddings(model_name="all-MiniLM-L6-v2")
-
-# testing db connection
-'''
-db_path = os.path.join(os.path.dirname(__file__), "..", "data", "sqlite-sakila.db")
-conn = sqlite3.connect(db_path)
-cursor = conn.cursor()
-cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-tables = cursor.fetchall()
-print("Tables:", tables)'''
 
 # Class for processing documents - TODO: we need to embed docs into chroma database 
 class DocumentLoader:
@@ -22,29 +12,34 @@ class DocumentLoader:
     def __init__(self, path="../data/"):
         self.dir_path = path # path to the data directory
 
-    #  extract db file - get table names and attributes 
     def load_schema(self, db_name):
-        db_path = self.dir_path + "db/" + db_name
+        db_path = os.path.join(self.dir_path, "db", db_name)
         try:
             conn = sqlite3.connect(db_path)
-            print("Connection successful.")
-        except FileNotFoundError:
-            print("Error: File not found.")
+            print(f"[+] Connected to {db_name}")
+        except sqlite3.OperationalError:
+            print(f"[!] Error: Could not connect to DB at {db_path}")
+            return []
 
-        cursor = conn.cursor() 
+        cursor = conn.cursor()
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = [t[0] for t in cursor.fetchall()]
 
         schema_docs = []
 
-        # loop through each table to get attributes
         for table in tables:
             cursor.execute(f"PRAGMA table_info({table})")
-            columns = [row[1] for row in cursor.fetchall()]
+            rows = cursor.fetchall()
+            columns = [f"{r[1]} (PK)" if r[5] else r[1] for r in rows]
             schema_text = f"Table: {table}\nColumns: {', '.join(columns)}"
             print(schema_text)
-            schema_docs.append(schema_text) # save them into the list
+            schema_docs.append({
+                "text": schema_text,
+                "table": table,
+                "columns": columns
+            })
 
+        conn.close()
         return schema_docs
 
 
