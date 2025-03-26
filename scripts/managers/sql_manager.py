@@ -1,10 +1,42 @@
-from managers.chroma_db_manager import ChromaDBManager
-
+# this from .. path is from the top level directory, so if you test something quick, you should make a test.py at the top directory 
+# so that we dont have to change scripts.managers... to managers. etc
+from scripts.managers.chroma_db_manager import ChromaDBManager
+import sqlite3
 
 class SQLSchemaManager(ChromaDBManager):
 
     def __init__(self):
         super().__init__()
+        self.data_path = self.base_path / "data" / "db"
+    
+    def load_schema(self, db_name):
+        db_path = self.data_path / db_name
+        try:
+            conn = sqlite3.connect(db_path)
+            print(f"[+] Connected to {db_name}")
+        except sqlite3.OperationalError:
+            print(f"[!] Error: Could not connect to DB at {db_path}")
+            return []
+
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = [t[0] for t in cursor.fetchall()]
+
+        schema_docs = []
+
+        for table in tables:
+            cursor.execute(f"PRAGMA table_info({table})")
+            rows = cursor.fetchall()
+            columns = [f"{r[1]} (PK)" if r[5] else r[1] for r in rows]
+            schema_text = f"Table: {table}\nColumns: {', '.join(columns)}"
+            schema_docs.append({
+                "text": schema_text,
+                "table": table,
+                "columns": columns
+            })
+
+        conn.close()
+        return schema_docs
     
     # add schema strings (with optional metadata) into a collection
     def add_schema_to_collection(self, collection_name, schema_docs):

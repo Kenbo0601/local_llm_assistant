@@ -1,18 +1,19 @@
 from loader import DocumentLoader
 from managers.sql_manager import SQLSchemaManager
 
-doc_loader = DocumentLoader()
-schema_docs = doc_loader.load_schema("sqlite-sakila.db")
+#doc_loader = DocumentLoader()
+#schema_docs = doc_loader.load_schema("sqlite-sakila.db")
 
 manager = SQLSchemaManager()
+schema_docs = manager.load_schema("sqlite-sakila.db")
 manager.create_collection("sakila")
 manager.add_schema_to_collection("sakila", schema_docs)
 
 print(manager.list_tables('sakila'))
 
-attrs = manager.list_table_attributes("sakila")
-for table, cols in attrs.items():
-    print(f"{table}: {cols}")
+#attrs = manager.list_table_attributes("sakila")
+#for table, cols in attrs.items():
+    #print(f"{table}: {cols}")
 
 
 

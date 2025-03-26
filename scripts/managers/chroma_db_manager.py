@@ -2,6 +2,9 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from pathlib import Path
 
+# Manager classes manage chroma logic - create/get collections from database etc
+# Child classes handles tasks for specific collections - ex: Sql_manager takes care of sql collections in the database
+
 
 # Base Manager Class
 class ChromaDBManager:
