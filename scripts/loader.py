@@ -1,7 +1,8 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
+
 import sqlite3
 import os 
 
@@ -13,7 +14,7 @@ class DocumentLoader:
         self.dir_path = path # path to the data directory
 
     def load_schema(self, db_name):
-        db_path = os.path.join(self.dir_path, "db", db_name)
+        db_path = os.path.join(self.dir_path, "db/", db_name)
         try:
             conn = sqlite3.connect(db_path)
             print(f"[+] Connected to {db_name}")
@@ -32,7 +33,7 @@ class DocumentLoader:
             rows = cursor.fetchall()
             columns = [f"{r[1]} (PK)" if r[5] else r[1] for r in rows]
             schema_text = f"Table: {table}\nColumns: {', '.join(columns)}"
-            print(schema_text)
+            #print(schema_text)
             schema_docs.append({
                 "text": schema_text,
                 "table": table,

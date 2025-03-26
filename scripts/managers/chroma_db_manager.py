@@ -1,12 +1,14 @@
-from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+from pathlib import Path
 
 # TODO: we probably should have one collection for one .db file instead of storing whole .db files in one collection 
 
 # Base Manager Class
 class ChromaDBManager:
-    def __init__(self, path="../chroma_db"):
-        self.db_path = path
+    def __init__(self):
+        self.base_path = Path(__file__).resolve().parents[2] # get absolute path to project root (2 levels up from this file)
+        self.db_path = str(self.base_path / "chroma_db") # chroma_db folder should be located in the top level - we also need to convert Path object -> str
         self.embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2") # sentence transformer model - this model is small and fast
         self.collections = {}
 
@@ -37,42 +39,12 @@ class ChromaDBManager:
             return db
 
 
-# Child Class - Handle SQL tasks
-class SQLSchemaManager(ChromaDBManager):
-
-    def __init__(self, chroma_path="../chroma_db"):
-        super().__init__(path=chroma_path)
-    
-    # add schema strings (with optional metadata) into a collection
-    def add_schema_to_collection(self, collection_name, schema_docs):
-        if collection_name not in self.collections:
-            raise ValueError(f"Collection '{collection_name}' not found. Create it first.")
-
-        texts = [doc["text"] for doc in schema_docs]
-        metadatas = [{"table": doc["table"], "columns": ", ".join(doc["columns"])} for doc in schema_docs]
-
-        self.collections[collection_name].add_texts(texts=texts, metadatas=metadatas)
-        print(f"[+] Added {len(texts)} schema docs to collection '{collection_name}'.")
- 
-    def list_tables(self, collection_name):
-        collection = self.get_collection(collection_name)
-        docs = collection.get(include=["metadatas"])
-        return sorted(set(meta["table"] for meta in docs["metadatas"] if "table" in meta))
-    
-    def list_table_attributes(self, collection_name):
-        collection = self.get_collection(collection_name)
-        docs = collection.get(include=["metadatas"])
-        return {
-            meta["table"]: meta.get("columns", [])
-            for meta in docs["metadatas"] if "table" in meta
-        }
-
 
 # Child Class - Handle PDF documents
 class PDFManager(ChromaDBManager):
 
-    def __init__(self, chroma_path="../chroma_db"):
-        super().__init__(path=chroma_path)
+    def __init__(self):
+        super().__init__()
     
     # add documents into existing collection - need to specify collection name 
     def add_documents_to_collection(self, collection_name, documents):
