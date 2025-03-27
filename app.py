@@ -9,7 +9,7 @@ import string
 def generate_response(user_message):
     return ''.join(random.choices(string.ascii_letters + string.whitespace, k=1000))
 
-
+# testing retriever 
 def generate_sql_response(user_message):
     manager = SQLSchemaManager()
     collection = manager.get_collection("sakila")
