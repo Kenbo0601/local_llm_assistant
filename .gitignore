@@ -1,5 +1,5 @@
 # virtual environments
-myenv
+myenv*
 
 # vector database
 chroma_db

@@ -1,8 +1,25 @@
 # script for UI/user interaction 
+from scripts.rag.retriever import Retriever
+from scripts.managers.sql_manager import SQLSchemaManager
 import streamlit as st
+import random
+import string
 
-# 1: selection box for selecting specific database files, or codebases etc 
-# 2: maybe also display all the available files?
+# Function to simulate assistant response (long text)
+def generate_response(user_message):
+    return ''.join(random.choices(string.ascii_letters + string.whitespace, k=1000))
+
+
+def generate_sql_response(user_message):
+    manager = SQLSchemaManager()
+    collection = manager.get_collection("sakila")
+
+    retriever = Retriever(collection)
+    context_chunks = retriever.retrieve_context(user_message)
+    for i, chunk in enumerate(context_chunks, 1):
+        print(f"Chunks {i}:\n{chunk}\n")
+    return 
+
 
 # To run: streamlit run app.py
 
@@ -38,10 +55,6 @@ with st.sidebar:
 
 
 # ───── Main Panel: Right Side ─────
-# Set up session state to hold chat history
-if "chat_history" not in st.session_state:
-    st.session_state["chat_history"] = []
-
 st.markdown(
     """
     <div style='text-align: center;'>
@@ -52,11 +65,45 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
+# Initialize message history if it doesn't exist
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 # ─── Chat-style prompt input ───
-# Input form with "Send" button
 with st.form(key="chat_form", clear_on_submit=True):
-    col1, col2 = st.columns([6, 1])  # Adjust widths as needed
+    col1, col2 = st.columns([6, 1])
     with col1:
         user_input = st.text_input("Ask a question...", key="user_prompt", label_visibility="collapsed")
     with col2:
         submitted = st.form_submit_button("Send")
+
+# If the user submitted a message
+if submitted and user_input:
+    generate_sql_response(user_input)
+    # Add user message
+    user_data = {"role": "user", "text": user_input}
+    st.session_state.messages.append(user_data)
+
+    # Generate assistant response (dummy for now)
+    response = generate_response(user_input)
+    ai_data = {"role": "assistant", "text": response}
+    st.session_state.messages.append(ai_data)
+
+
+grouped_messages = []
+i = 0
+while i < len(st.session_state.messages):
+    pair = []
+    if i < len(st.session_state.messages):
+        pair.append(st.session_state.messages[i])
+    if i + 1 < len(st.session_state.messages):
+        pair.append(st.session_state.messages[i + 1])
+    grouped_messages.append(pair)
+    i += 2
+
+# Display most recent pairs at the top
+for pair in reversed(grouped_messages):
+    for message in pair:
+        with st.chat_message(message["role"]):
+            st.markdown(message["text"])
