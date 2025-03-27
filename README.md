@@ -73,3 +73,37 @@ app.py
       ├── RAGRetriever → gets relevant schema
       ├── PromptBuilder → builds the final prompt
       └── RAGGenerator → generates the SQL
+
+
+---
+
+## Python Environment Setup (Recommended: pyenv)
+
+To ensure you're using the correct Python version and avoid dependency issues:
+
+### 🔧 Create a Python 3.12 virtual environment using `pyenv`
+
+```bash
+# Install pyenv if you haven't already
+curl https://pyenv.run | bash
+
+# Restart your shell and ensure pyenv is initialized
+# (add these lines to ~/.bashrc or ~/.zshrc)
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+source ~/.bashrc  # or ~/.zshrc
+
+# Install Python 3.12.2
+pyenv install 3.12.2
+
+# Set Python 3.12.2 as the version for this project
+pyenv local 3.12.2
+
+# Create and activate a virtual environment
+python -m venv myenv
+source myenv/bin/activate
+
+# Install dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
