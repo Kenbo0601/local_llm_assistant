@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from scripts.managers.sql_manager import SQLSchemaManager
 
+# To run this test: python3 -m unittest tests/test_sql_manager.py
 class TestSQLSchemaManager(unittest.TestCase):
 
     @classmethod
