@@ -74,7 +74,7 @@ app.py
       ├── PromptBuilder → builds the final prompt
       └── RAGGenerator → generates the SQL
 
-
+```
 ---
 
 ## Python Environment Setup (Recommended: pyenv)
