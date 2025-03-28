@@ -11,7 +11,8 @@ collection = manager.get_collection("sakila")
 
 retriever = Retriever(collection)
 
-question = "Find top 3 customers who paid more than 10 dollers."
+#question = "Find top 3 customers who paid more than 10 dollers."
+question = "Display the first and last names of all actors from the table actor."
 context_chunks = retriever.retrieve_context(question)
 
 for i, chunk in enumerate(context_chunks, 1):

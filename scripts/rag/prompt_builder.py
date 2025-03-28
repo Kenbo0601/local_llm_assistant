@@ -7,6 +7,7 @@ Responsibilities:
 - Clean/format user questions 
 '''
 
+#TODO: Prompt Engineering - we need to build a good prompt to feed it into LLM 
 class PromptBuilder():
     
     def __init__(self):

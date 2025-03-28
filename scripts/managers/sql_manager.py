@@ -9,7 +9,6 @@ class SQLSchemaManager(ChromaDBManager):
         super().__init__()
         self.data_path = self.base_path / "data" / "db"
 
-    # TODO: maybe we need to add foreign keys into vector database for better accuracy when we feed prompt into llm  
     def load_schema(self, db_name):
         db_path = self.data_path / db_name
         try:
