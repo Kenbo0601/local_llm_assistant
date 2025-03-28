@@ -7,3 +7,6 @@ Responsibilities:
  - Use PromptBuilder to build prompt 
  - Use Generator to get final response 
 '''
+
+class Pipeline():
+    pass
