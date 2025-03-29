@@ -19,7 +19,12 @@ class Retriever:
             collection: A LangChain Chroma vectorstore collection.
             top_k (int): Number of top relevant chunks to retrieve.
         """
-        self.retriever = collection.as_retriever(search_kwargs={"k": top_k})
+        self.top_k = top_k
+        self.update_collection(collection)
+
+    def update_collection(self,collection):
+        self.collection = collection
+        self.retriever = self.collection.as_retriever(search_kwargs={"k": self.top_k})
 
     def retrieve_context(self, question: str):
         """

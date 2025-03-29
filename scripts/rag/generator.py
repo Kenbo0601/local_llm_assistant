@@ -9,5 +9,5 @@ Responsibilities:
  - Call the model with the prompt and return the output 
 '''
 
-class Generator():
+class Generator:
     pass 

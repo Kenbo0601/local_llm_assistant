@@ -8,7 +8,7 @@ Responsibilities:
 '''
 
 #TODO: Prompt Engineering - we need to build a good prompt to feed it into LLM 
-class PromptBuilder():
+class PromptBuilder:
     
     def __init__(self):
         self.keywords = ["Columns:", "Foreign Keys:"]

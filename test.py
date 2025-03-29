@@ -1,6 +1,7 @@
 from scripts.rag.retriever import Retriever
 from scripts.managers.sql_manager import SQLSchemaManager
 from scripts.rag.prompt_builder import PromptBuilder
+from scripts.rag.rag_pipeline import Pipeline
 
 
 # testing RAG retriever
@@ -10,15 +11,8 @@ manager = SQLSchemaManager()
 #manager.add_schema_to_collection("sakila", docs)
 collection = manager.get_collection("sakila")
 
-retriever = Retriever(collection)
-
 #question = "Find top 3 customers who paid more than 10 dollers."
 question = "Display the first and last names of all actors from the table actor."
-context_chunks = retriever.retrieve_context(question)
-
-#for i, chunk in enumerate(context_chunks, 1):
-    #print(f"Chunks {i}:\n{chunk}\n")
-
-builder = PromptBuilder()
-p = builder.build_sql_prompt(question, context_chunks)
-print(p)
+pipeline = Pipeline() # we only need to create one pipeline object. when user switches collection, just call update_collection function
+pipeline.update_collection(collection)
+pipeline.run(question)
