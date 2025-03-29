@@ -1,5 +1,6 @@
 from scripts.rag.retriever import Retriever
 from scripts.managers.sql_manager import SQLSchemaManager
+from scripts.rag.prompt_builder import PromptBuilder
 
 
 # testing RAG retriever
@@ -15,5 +16,9 @@ retriever = Retriever(collection)
 question = "Display the first and last names of all actors from the table actor."
 context_chunks = retriever.retrieve_context(question)
 
-for i, chunk in enumerate(context_chunks, 1):
-    print(f"Chunks {i}:\n{chunk}\n")
+#for i, chunk in enumerate(context_chunks, 1):
+    #print(f"Chunks {i}:\n{chunk}\n")
+
+builder = PromptBuilder()
+p = builder.build_sql_prompt(question, context_chunks)
+print(p)
