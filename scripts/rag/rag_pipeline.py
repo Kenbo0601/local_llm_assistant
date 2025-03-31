@@ -39,5 +39,5 @@ class Pipeline:
         # 2: build prompt for LLM 
         prompt = self.prompt_builder.build_sql_prompt(user_question, context_chunks)
 
-        print(prompt)
+        self.generator.generate_sql(prompt)
         return 

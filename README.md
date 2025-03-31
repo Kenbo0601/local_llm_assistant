@@ -8,9 +8,29 @@ A lightweight RAG-based assistant using ChromaDB as a local vector store and Sen
 - Easy to plug in OpenAI or local LLMs
 
 ## Usage
-1. Put your `.txt`,`.db`, `.pdf` files into `data/`
-2. Run `scripts/loader.py` to load them
-3. Use `app.py` to query your assistant
+1. **Install Ollama (for Local LLM Inference)**
+
+   This app uses [Ollama](https://ollama.com) to run Code LLaMA locally.
+
+   **macOS:**
+   ```bash
+   brew install ollama
+   ```
+
+   **Linux**
+   ```bash
+   curl -fsSL https://ollama.com/install.sh | sh
+   ```
+
+2. **Download Code LLaMA**
+
+   Pull the 7B Instruct model:
+   ```bash
+   ollama pull codellama:7b-instruct
+   ```
+
+3. Put your `.txt`,`.db`, `.pdf` files into `data/`
+4. Use `app.py` to query your assistant
 
 
 # High-Level Workflow: Retrieval-Augmented Generation (RAG)

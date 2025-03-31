@@ -3,4 +3,5 @@ sentence-transformers
 langchain
 langchain-chroma
 langchain-huggingface
+lanchain-ollama
 streamlit
