@@ -1,25 +1,92 @@
 # script for UI/user interaction 
 from scripts.rag.retriever import Retriever
 from scripts.managers.sql_manager import SQLSchemaManager
+from scripts.rag.rag_pipeline import Pipeline
 import streamlit as st
 import random
 import string
+import subprocess
+from pathlib import Path
+
+
+# if i do the following, it will mess up chat message order (user -> assistant)
+# initialize objects so that we won't recreate copies while the app is running
+#if "pipeline" not in st.session_state:
+    #st.session_state.pipeline = Pipeline()
+
+#if "schema_manager" not in st.session_state:
+    #st.session_state.schema_manager = SQLSchemaManager()
+
+
+
+# ─────────────────────────────
+#  Functions 
+# ─────────────────────────────
+
+# Retrieve ollama models from user's system
+def get_ollama_models():
+    try:
+        result = subprocess.run(["ollama", "list"], capture_output=True, text=True, check=True)
+        models = []
+        for line in result.stdout.strip().split("\n")[1:]:  # Skip header
+            if line.strip():
+                model_name = line.split()[0]
+                models.append(model_name)
+        return models
+    except Exception as e:
+        st.error(f"Error retrieving Ollama models: {e}")
+        return []
+
+
+# Go into data folder and grab documents
+def display_documents():
+    # Root data folder
+    data_folder = Path("data")
+
+    # Recursively find all .db and .pdf files
+    file_types = ["*.db", "*.pdf"]
+    all_files = []
+    for pattern in file_types:
+        all_files.extend(data_folder.glob(f"**/{pattern}"))
+
+    # Display files as relative paths (e.g., "db/sakila.db")
+    file_labels = [str(f.relative_to(data_folder)) for f in all_files]
+    return file_labels
+
+
+# for sidebar - section 1
+def create_collection():
+    # when user selects document and load_submitted button was pushed (sidebar - section1),
+    # manager is responsible for creating collections and adding them into vector database. 
+    # for now, we have sql and pdf managers, so if a user selects a .db file, then 
+    # 1: strip db/name.db -> name.db 
+    # 2: invoke manager.create_collection(file_name) -> this will create a collection into database
+    # 3: then call manager.add to collection method (currently only add_schema_to_collection is available)
+    return 
+
+# for sidebar - section 2
+def select_collection():
+    # "select collection" in sidebar in the app. 
+    # 1: display available collections in the database 
+    # 2: when user selects collection, invoke pipeline.update_collection so that RAG knows which collection to go into 
+    return 
+
 
 # Function to simulate assistant response (long text)
-def generate_response(user_message):
+def generate_response():
     return ''.join(random.choices(string.ascii_letters + string.whitespace, k=1000))
 
 # testing retriever 
 def generate_sql_response(user_message):
-    manager = SQLSchemaManager()
-    collection = manager.get_collection("sakila")
+    collection = st.session_state.schema_manager.get_collection("sakila")
+    st.session_state.pipeline.update_collection(collection)
+    res = st.session_state.pipeline.run(user_message)
+    return res
 
-    retriever = Retriever(collection)
-    context_chunks = retriever.retrieve_context(user_message)
-    for i, chunk in enumerate(context_chunks, 1):
-        print(f"Chunks {i}:\n{chunk}\n")
-    return 
 
+# ─────────────────────────────
+#  Streamlit App Layout
+# ─────────────────────────────
 
 # To run: streamlit run app.py
 
@@ -40,7 +107,7 @@ with st.sidebar:
     st.caption("Let’s add new documents into your system!")
 
     with st.form(key="load_doc_form"):
-        load_doc = st.selectbox("Select Document", ["sakila", "chinook", "custom.db"])
+        load_doc = st.selectbox("Select Document", display_documents())
         load_submitted = st.form_submit_button("Load")
         if load_submitted:
             st.success(f"Loaded document: {load_doc}")
@@ -50,7 +117,16 @@ with st.sidebar:
     # ───── Section 2: Other Options ─────
     #st.selectbox("Available Collections", ["sakila", "chinook", "custom.db"])
     collection = st.selectbox("Select Collection", ["sakila", "chinook", "custom.db"])
-    model = st.selectbox("Select Model", ["sakila", "chinook", "custom.db"])
+    # Get available models
+    ollama_models = get_ollama_models()
+
+    # Display them in a selectbox
+    if ollama_models:
+        selected_model = st.selectbox("Select Ollama Model", ollama_models)
+        st.success(f"Selected model: {selected_model}")
+    else:
+        st.warning("No Ollama models found. Try running: `ollama pull codellama:7b-instruct`")
+
     #st.write(f"You selected: {l}") real time interaction 
 
 
@@ -80,13 +156,13 @@ with st.form(key="chat_form", clear_on_submit=True):
 
 # If the user submitted a message
 if submitted and user_input:
-    generate_sql_response(user_input)
     # Add user message
     user_data = {"role": "user", "text": user_input}
     st.session_state.messages.append(user_data)
 
     # Generate assistant response (dummy for now)
-    response = generate_response(user_input)
+    #response = generate_sql_response(user_input)
+    response = generate_response()
     ai_data = {"role": "assistant", "text": response}
     st.session_state.messages.append(ai_data)
 
