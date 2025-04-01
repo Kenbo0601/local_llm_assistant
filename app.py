@@ -9,7 +9,6 @@ import subprocess
 from pathlib import Path
 
 
-# if i do the following, it will mess up chat message order (user -> assistant)
 # initialize objects so that we won't recreate copies while the app is running
 if "pipeline" not in st.session_state:
     st.session_state.pipeline = Pipeline()
@@ -72,11 +71,7 @@ def select_collection():
     return 
 
 
-# Function to simulate assistant response (long text)
-def generate_response():
-    return ''.join(random.choices(string.ascii_letters + string.whitespace, k=1000))
-
-# testing retriever 
+# TODO: pass the model name so that it switches inside the generator 
 def generate_sql_response(user_message: str, pipeline, collection):
     pipeline.update_collection(collection)
     response = pipeline.run(user_message)

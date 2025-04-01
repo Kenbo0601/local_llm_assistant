@@ -9,6 +9,7 @@ Responsibilities:
  - Call the model with the prompt and return the output 
 '''
 
+#TODO: need to add a method for changing models 
 class Generator:
     
     def __init__(self, model_name="codellama:7b-instruct", temperature=0.2):
