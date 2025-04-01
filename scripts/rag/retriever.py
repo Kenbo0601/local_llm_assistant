@@ -11,7 +11,7 @@ Responsibilities:
 
 class Retriever:
 
-    def __init__(self, collection, top_k: int = 6):
+    def __init__(self, collection, top_k: int = 4):
         """
         Initialize the retriever with a Chroma collection.
         

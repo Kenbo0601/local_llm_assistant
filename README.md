@@ -29,6 +29,11 @@ A lightweight RAG-based assistant using ChromaDB as a local vector store and Sen
    ollama pull codellama:7b-instruct
    ```
 
+   You can also pull the 13B Instruct model (better performance, higher memory usage):
+   ```bash
+   ollama pull codellama:13b-instruct
+   ```
+
 3. Put your `.txt`,`.db`, `.pdf` files into `data/`
 4. Use `app.py` to query your assistant
 
