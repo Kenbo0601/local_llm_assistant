@@ -16,4 +16,5 @@ class Generator:
     
     def generate_sql(self, prompt: str) -> str:
         response = self.llm.invoke([HumanMessage(content=prompt)])
-        print(response.content)
+        #print(response.content)
+        return response.content

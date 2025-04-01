@@ -32,11 +32,10 @@ class Pipeline:
 
     
     def run(self, user_question) -> str:
-
         # 1: retriever finds and returns relavant data
         context_chunks = self.retriever.retrieve_context(user_question)
         for i, chunk in enumerate(context_chunks):
-            print(f"chunk{i}\n{chunk}\n")
+            print(f"chunk{i}:\n{chunk}\n")
 
         # 2: build prompt for LLM 
         prompt = self.prompt_builder.build_sql_prompt(user_question, context_chunks)

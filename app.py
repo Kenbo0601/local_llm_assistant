@@ -11,11 +11,11 @@ from pathlib import Path
 
 # if i do the following, it will mess up chat message order (user -> assistant)
 # initialize objects so that we won't recreate copies while the app is running
-#if "pipeline" not in st.session_state:
-    #st.session_state.pipeline = Pipeline()
+if "pipeline" not in st.session_state:
+    st.session_state.pipeline = Pipeline()
 
-#if "schema_manager" not in st.session_state:
-    #st.session_state.schema_manager = SQLSchemaManager()
+if "schema_manager" not in st.session_state:
+    st.session_state.schema_manager = SQLSchemaManager()
 
 
 
@@ -77,11 +77,10 @@ def generate_response():
     return ''.join(random.choices(string.ascii_letters + string.whitespace, k=1000))
 
 # testing retriever 
-def generate_sql_response(user_message):
-    collection = st.session_state.schema_manager.get_collection("sakila")
-    st.session_state.pipeline.update_collection(collection)
-    res = st.session_state.pipeline.run(user_message)
-    return res
+def generate_sql_response(user_message: str, pipeline, collection):
+    pipeline.update_collection(collection)
+    response = pipeline.run(user_message)
+    return response
 
 
 # ─────────────────────────────
@@ -156,13 +155,20 @@ with st.form(key="chat_form", clear_on_submit=True):
 
 # If the user submitted a message
 if submitted and user_input:
+    schema_manager = st.session_state.schema_manager
+    pipeline = st.session_state.pipeline
+    collection = schema_manager.get_collection("sakila")
+
+    with st.spinner("Generating SQL..."):
+        response = generate_sql_response(user_input, pipeline, collection)
+
     # Add user message
     user_data = {"role": "user", "text": user_input}
     st.session_state.messages.append(user_data)
 
     # Generate assistant response (dummy for now)
     #response = generate_sql_response(user_input)
-    response = generate_response()
+    #response = generate_response()
     ai_data = {"role": "assistant", "text": response}
     st.session_state.messages.append(ai_data)
 
@@ -182,4 +188,7 @@ while i < len(st.session_state.messages):
 for pair in reversed(grouped_messages):
     for message in pair:
         with st.chat_message(message["role"]):
-            st.markdown(message["text"])
+            if message["role"] == "assistant":
+                st.code(message["text"], language="sql")
+            else:
+                st.markdown(message["text"])
