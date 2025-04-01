@@ -38,7 +38,7 @@ class PromptBuilder:
 
         prompt = f"""You are an AI assistant that translates natural language questions into SQL queries.
 
-        Only use the tables and columns provided below. Use JOINs where foreign keys exist. Do not explain the result — just return the SQL query.
+        Only use the tables and columns provided below. Use JOINs if necessary. Do not explain the result — just return the SQL query.
 
         ### Database Schema:
         {formatted_schema}

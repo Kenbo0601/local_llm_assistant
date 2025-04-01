@@ -11,9 +11,9 @@ Responsibilities:
 
 class Generator:
     
-    def __init__(self, model_name="llama3", temperature=0.2):
+    def __init__(self, model_name="codellama:7b-instruct", temperature=0.2):
         self.llm = ChatOllama(model=model_name, temperature=temperature)
     
     def generate_sql(self, prompt: str) -> str:
-        response = self.llm([HumanMessage(content=prompt)])
+        response = self.llm.invoke([HumanMessage(content=prompt)])
         print(response.content)
