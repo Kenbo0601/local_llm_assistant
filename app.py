@@ -159,7 +159,7 @@ with st.form(key="chat_form", clear_on_submit=True):
 if submitted and user_input:
     schema_manager = st.session_state.schema_manager
     pipeline = st.session_state.pipeline
-    collection = schema_manager.get_collection("sakila")
+    collection = schema_manager.get_collection("sakila") # TODO: maybe update collection when user selects collection 
 
     with st.spinner("Generating SQL..."):
         response = generate_sql_response(user_input, pipeline, collection)
