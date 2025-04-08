@@ -35,7 +35,10 @@ A lightweight RAG-based assistant using ChromaDB as a local vector store and Sen
    ```
 
 3. Put your `.txt`,`.db`, `.pdf` files into `data/`
-4. Use `app.py` to query your assistant
+4. Run the app by typing
+   ```bash
+   streamlit run app.py
+   ```
 
 
 # High-Level Workflow: Retrieval-Augmented Generation (RAG)
