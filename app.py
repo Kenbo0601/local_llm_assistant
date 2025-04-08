@@ -54,13 +54,19 @@ def display_documents():
 
 
 # for sidebar - section 1
-def create_collection():
+def create_collection_wrapper(doc):
     # when user selects document and load_submitted button was pushed (sidebar - section1),
     # manager is responsible for creating collections and adding them into vector database. 
     # for now, we have sql and pdf managers, so if a user selects a .db file, then 
-    # 1: strip db/name.db -> name.db 
+
+    #TODO: The code is working, but this is only for handling db files so we need to add more logic for handling different file types
+    # 1: split to get name
+    doc_name = doc.split("/")[1] # doc should be folder/name such as db/sample.db so we split then take only the name
     # 2: invoke manager.create_collection(file_name) -> this will create a collection into database
+    st.session_state.schema_manager.create_collection(doc_name)
     # 3: then call manager.add to collection method (currently only add_schema_to_collection is available)
+    schema = st.session_state.schema_manager.load_schema(doc_name)
+    st.session_state.schema_manager.add_schema_to_collection(doc_name, schema) # doc_name = name in database, schema is the data loaded from .db file
     return 
 
 # for sidebar - section 2
@@ -104,6 +110,7 @@ with st.sidebar:
         load_doc = st.selectbox("Select Document", display_documents())
         load_submitted = st.form_submit_button("Load")
         if load_submitted:
+            create_collection_wrapper(load_doc)
             st.success(f"Loaded document: {load_doc}")
 
     st.markdown("---")  # Optional divider
