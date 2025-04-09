@@ -40,3 +40,12 @@ class ChromaDBManager:
             print(f"[+] Loaded collection '{collection_name}' from disk.")
             return db
 
+    # retrieve all collections in the database
+    def get_all_collections(self):
+        db = Chroma(persist_directory=self.db_path)
+        client = db._client
+        collections = client.list_collections()
+        # when using chroma + langchain, langchain creates a default collection named "langchain"
+        # under the hood, so we filter it before returning as a list of collection names
+        filtered = [col for col in collections if col != "langchain"] 
+        return filtered

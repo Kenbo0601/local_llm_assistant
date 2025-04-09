@@ -73,8 +73,9 @@ def create_collection_wrapper(doc):
 def select_collection():
     # "select collection" in sidebar in the app. 
     # 1: display available collections in the database 
+    collections = st.session_state.schema_manager.get_all_collections()
     # 2: when user selects collection, invoke pipeline.update_collection so that RAG knows which collection to go into 
-    return 
+    return collections
 
 
 # TODO: pass the model name so that it switches inside the generator 
@@ -117,7 +118,9 @@ with st.sidebar:
 
     # ───── Section 2: Other Options ─────
     #st.selectbox("Available Collections", ["sakila", "chinook", "custom.db"])
-    collection = st.selectbox("Select Collection", ["sakila", "chinook", "custom.db"])
+    collection_name = st.selectbox("Select Collection", select_collection())
+    if collection_name:
+        st.success(f"Selected collection: {collection_name}")
     # Get available models
     ollama_models = get_ollama_models()
 
@@ -159,7 +162,7 @@ with st.form(key="chat_form", clear_on_submit=True):
 if submitted and user_input:
     schema_manager = st.session_state.schema_manager
     pipeline = st.session_state.pipeline
-    collection = schema_manager.get_collection("sakila") # TODO: maybe update collection when user selects collection 
+    collection = schema_manager.get_collection(collection_name) # TODO: maybe update collection when user selects collection 
 
     with st.spinner("Generating SQL..."):
         response = generate_sql_response(user_input, pipeline, collection)
