@@ -34,8 +34,13 @@ A lightweight RAG-based assistant using ChromaDB as a local vector store and Sen
    ollama pull codellama:13b-instruct
    ```
 
-3. Put your `.txt`,`.db`, `.pdf` files into `data/`
-4. Run the app by typing
+3. Install dependencies
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Place your `.txt`,`.db`, `.pdf` files into `data/`
+5. Run the app by typing
    ```bash
    streamlit run app.py
    ```
@@ -89,49 +94,16 @@ This project uses a modular RAG pipeline to generate SQL queries based on user q
 
 ---
 
-## Component Relationship Diagram
-
-```text
-app.py
- ├── SQLSchemaManager
- │    └── loads and embeds schema into Chroma
- ├── ChromaDBManager
- │    └── creates and manages Chroma collections
- └── RAGPipeline
-      ├── RAGRetriever → gets relevant schema
-      ├── PromptBuilder → builds the final prompt
-      └── RAGGenerator → generates the SQL
-
-```
----
-
 ## Python Environment Setup (Recommended: pyenv)
 
 To ensure you're using the correct Python version and avoid dependency issues:
 
-### 🔧 Create a Python 3.12 virtual environment using `pyenv`
+### 🔧 Create a Python 3.10+ virtual environment using `pyenv`
+Follow the official pyenv installation guide to install and manage Python versions:
+Official Documentation: [Visit pyenv GitHub](https://github.com/pyenv/pyenv)
 
-```bash
-# Install pyenv if you haven't already
-curl https://pyenv.run | bash
 
-# Restart your shell and ensure pyenv is initialized
-# (add these lines to ~/.bashrc or ~/.zshrc)
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-source ~/.bashrc  # or ~/.zshrc
-
-# Install Python 3.12.2
-pyenv install 3.12.2
-
-# Set Python 3.12.2 as the version for this project
-pyenv local 3.12.2
-
-# Create and activate a virtual environment
+#### Create and activate a virtual environment in the project folder
 python -m venv myenv
 source myenv/bin/activate
 
-# Install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
