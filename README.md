@@ -107,7 +107,7 @@ This guide will walk you through how to set up and use the application interface
 2. **Load a DB File into the Vector Database**
    - Open the app.
    - On the **top left sidebar**, select a `.db` file.
-   - Click the **'Load'** button.
+   - Click the **'Upload'** button.
    - This action creates a collection for your selected DB file in your local vector database.
 
 3. **Select a Collection for Text-to-SQL**

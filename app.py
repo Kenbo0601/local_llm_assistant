@@ -104,15 +104,15 @@ with st.sidebar:
     st.title("🤖 RAG Assistant")
 
     # ───── Section 1: Load Document ─────
-    st.markdown("#### 📄 Load Document")
+    st.markdown("#### 📄 Upload Document")
     st.caption("Let’s add new documents into your system!")
 
     with st.form(key="load_doc_form"):
         load_doc = st.selectbox("Select Document", display_documents())
-        load_submitted = st.form_submit_button("Load")
+        load_submitted = st.form_submit_button("Upload")
         if load_submitted:
             create_collection_wrapper(load_doc)
-            st.success(f"Loaded document: {load_doc}")
+            st.success(f"Uploaded document: {load_doc}")
 
     st.markdown("---")  # Optional divider
 
