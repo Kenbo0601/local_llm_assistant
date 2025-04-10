@@ -127,6 +127,7 @@ with st.sidebar:
     # Display them in a selectbox
     if ollama_models:
         selected_model = st.selectbox("Select Ollama Model", ollama_models)
+        st.session_state.pipeline.change_model(selected_model) # when user switches the model, invoke change model function 
         st.success(f"Selected model: {selected_model}")
     else:
         st.warning("No Ollama models found. Try running: `ollama pull codellama:7b-instruct`")

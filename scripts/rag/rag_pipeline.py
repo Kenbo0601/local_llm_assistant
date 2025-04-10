@@ -30,6 +30,9 @@ class Pipeline:
         else:
             self.retriever.update_collection(new_collection) # every time user switches collection, update collection in retriever
 
+    # invoke set_model function in generator class
+    def change_model(self, new_model_name):
+        self.generator.set_model(new_model_name)
     
     def run(self, user_question) -> str:
         # 1: retriever finds and returns relavant data
