@@ -54,20 +54,29 @@ It uses a lightweight Retrieval-Augmented Generation (RAG) system built with Chr
    ```
 
 4. Place your `.txt`,`.db`, `.pdf` files into `data/`
-5. Run the app by typing
+5. Run the App 
+
+   You have two options for running the application:
+
+   ### Option A: Standard Streamlit Command
+
+   Run the app directly with Streamlit:
+
    ```bash
    streamlit run app.py
    ```
 
-Alternatively, make the run.sh executable
-```bash
-chmod +x run.sh
-```
+   ### Option B: Use a Shell Script
 
-Then run 
-```bash
-./run.sh
-```
+   Make the ```run.sh``` script executable
+   ```bash
+   chmod +x run.sh
+   ```
+
+   Then run the app with:
+   ```bash
+   ./run.sh
+   ```
 
 ---
 
