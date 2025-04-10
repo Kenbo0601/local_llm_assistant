@@ -59,6 +59,16 @@ It uses a lightweight Retrieval-Augmented Generation (RAG) system built with Chr
    streamlit run app.py
    ```
 
+Alternatively, make the run.sh executable
+```bash
+chmod +x run.sh
+```
+
+Then run 
+```bash
+./run.sh
+```
+
 ---
 
 ## Python Environment Setup (Recommended: pyenv)
