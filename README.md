@@ -48,13 +48,12 @@ It uses a lightweight Retrieval-Augmented Generation (RAG) system built with Chr
    ollama pull codellama:13b-instruct
    ```
 
-3. Install dependencies
+3. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Place your `.txt`,`.db`, `.pdf` files into `data/`
-5. Run the App 
+4. **Run the App**
 
    You have two options for running the application:
 
