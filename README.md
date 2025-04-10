@@ -1,11 +1,25 @@
-# Local LLM Assistant with Chroma + RAG
+# A lightweight RAG-based local LLM assistant 
 
-A lightweight RAG-based assistant using ChromaDB as a local vector store and Sentence-Transformers for embeddings.
+This app is a fully local Text-to-SQL assistant that runs on your own machine — no data ever leaves your computer.
+
+It uses a lightweight Retrieval-Augmented Generation (RAG) system built with ChromaDB as the vector store and Sentence-Transformers for embeddings. The goal is to allow users to query their structured data (SQLite `.db` files) using natural language, powered by a local Large Language Model (LLM).
 
 ## Features
-- Vector search over your notes, PDFs, or any text
-- Chroma as local, persistent DB
-- Easy to plug in OpenAI or local LLMs
+- 💾 **Local Vector Database with ChromaDB**  
+  Store your `.db` files locally, and the app will create a vectorized representation of your database schema and sample data.
+
+- 🤖 **LLM-Powered SQL Generation**  
+  Uses a local LLM (no API keys or internet required) to generate SQL queries from your natural language questions.
+
+- 🔍 **RAG-Based Querying**  
+  Retrieves relevant database information and context before generating a query, increasing accuracy and relevance.
+
+- 🔐 **Fully Local Execution**  
+  Privacy-focused — no external services or cloud dependencies.
+
+- ⚡ **Lightweight and Easy to Use**  
+  Simple UI to load databases, manage collections, and interact with your data using a chat interface.
+
 
 ## Usage
 1. **Install Ollama (for Local LLM Inference)**
