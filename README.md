@@ -45,6 +45,51 @@ A lightweight RAG-based assistant using ChromaDB as a local vector store and Sen
    streamlit run app.py
    ```
 
+---
+
+## Python Environment Setup (Recommended: pyenv)
+
+To ensure you're using the correct Python version and avoid dependency issues:
+
+### Create a Python 3.10+ virtual environment using `pyenv`
+Follow the official pyenv installation guide to install and manage Python versions:<br />
+Official Documentation: [Visit pyenv GitHub](https://github.com/pyenv/pyenv)
+
+
+### Create and activate a virtual environment in the project folder
+```bash
+python -m venv myenv
+source myenv/bin/activate
+```
+
+---
+
+## Getting Started with the Text-to-SQL app
+This guide will walk you through how to set up and use the application interface to generate SQL queries from natural languages.
+
+### Step-by-Step Instructions
+
+1. **Place Your DB Files**  
+   Put your `.db` files into the `data/` folder of the project.
+
+2. **Load a DB File into the Vector Database**
+   - Open the app.
+   - On the **top left sidebar**, select a `.db` file.
+   - Click the **'Load'** button.
+   - This action creates a collection for your selected DB file in your local vector database.
+
+3. **Select a Collection for Text-to-SQL**
+   - On the **bottom left sidebar**, choose the collection you want to use.
+   - After selecting it, you're ready to ask questions.
+
+4. **Start Chatting**
+   - Type your natural language query into the chatbox.
+   - The app will generate the corresponding SQL query using the selected database collection.
+
+You are all set! Start exploring your databases with natural language queries.
+
+---
+
 
 # High-Level Workflow: Retrieval-Augmented Generation (RAG)
 
@@ -92,20 +137,4 @@ This project uses a modular RAG pipeline to generate SQL queries based on user q
    - The final SQL query is returned to `app.py`
    - Optionally executed or displayed to the user
 
----
-
-## Python Environment Setup (Recommended: pyenv)
-
-To ensure you're using the correct Python version and avoid dependency issues:
-
-### Create a Python 3.10+ virtual environment using `pyenv`
-Follow the official pyenv installation guide to install and manage Python versions:<br />
-Official Documentation: [Visit pyenv GitHub](https://github.com/pyenv/pyenv)
-
-
-### Create and activate a virtual environment in the project folder
-```bash
-python -m venv myenv
-source myenv/bin/activate
-```
 
