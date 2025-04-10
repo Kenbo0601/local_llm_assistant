@@ -98,12 +98,14 @@ This project uses a modular RAG pipeline to generate SQL queries based on user q
 
 To ensure you're using the correct Python version and avoid dependency issues:
 
-### 🔧 Create a Python 3.10+ virtual environment using `pyenv`
-Follow the official pyenv installation guide to install and manage Python versions:
+### Create a Python 3.10+ virtual environment using `pyenv`
+Follow the official pyenv installation guide to install and manage Python versions:<br />
 Official Documentation: [Visit pyenv GitHub](https://github.com/pyenv/pyenv)
 
 
-#### Create and activate a virtual environment in the project folder
+### Create and activate a virtual environment in the project folder
+```bash
 python -m venv myenv
 source myenv/bin/activate
+```
 
