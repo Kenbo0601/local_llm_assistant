@@ -73,6 +73,13 @@ class SQLSchemaManager(ChromaDBManager):
                 metadata["foreign_keys"] = ", ".join(doc["foreign_keys"])
             metadatas.append(metadata)
 
+        # the texts list is the data that gets coverted into collection of vectors
+        # texts list looks like this: ['Table: actor\nColumns: actor_id (PK), first_name, last_name, last_update', 'Table: country\nColumns:  
+        # so each string (table) = one vector 
+        # The texts are embedded -> converted into numerical vectors
+        # The metadata is stored alongside each vector, but is not embedded.
+
+        # with metadatas, we can add search keywords in retriever - such as table names
         self.collections[collection_name].add_texts(texts=texts, metadatas=metadatas)
         print(f"[+] Added {len(texts)} schema docs to collection '{collection_name}'.")
  
