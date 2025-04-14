@@ -6,3 +6,6 @@ chroma_db
 
 # pycache 
 __pycache__/
+
+# pycharm
+.idea/*
