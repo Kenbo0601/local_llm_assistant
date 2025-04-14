@@ -22,9 +22,9 @@ class Retriever:
         self.top_k = top_k
         self.update_collection(collection)
 
+    # when user selects different collection, pipeline invokes this function 
     def update_collection(self,collection):
         self.collection = collection
-        self.retriever = self.collection.as_retriever(search_kwargs={"k": self.top_k})
 
     def retrieve_context(self, question: str):
         """
@@ -36,6 +36,13 @@ class Retriever:
         Returns:
             List[str]: List of retrieved schema texts (page_content).
         """
+
+        # we can probably move this retriver into retrieve_context function 
+        # we can extract table names from user's question but ..
+        # then we somehow need to know all the table names that the user is currently selecting, 
+        # then implement a function to extract table names 
+        # then we can do something like this; retriever = self.collection.as_retriever(search_kwargs={"k": 3, "filter": {"table": table_filter}})
+        self.retriever = self.collection.as_retriever(search_kwargs={"k": self.top_k})
         documents = self.retriever.invoke(question)
         return [doc.page_content for doc in documents] 
     

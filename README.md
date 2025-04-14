@@ -1,11 +1,25 @@
-# Local LLM Assistant with Chroma + RAG
+# A lightweight RAG-based local LLM assistant 
 
-A lightweight RAG-based assistant using ChromaDB as a local vector store and Sentence-Transformers for embeddings.
+This app is a fully local Text-to-SQL assistant that runs on your own machine — no data ever leaves your computer.
+
+It uses a lightweight Retrieval-Augmented Generation (RAG) system built with ChromaDB as the vector store and Sentence-Transformers for embeddings. The goal is to allow users to query their structured data (SQLite `.db` files) using natural language, powered by a local Large Language Model (LLM).
 
 ## Features
-- Vector search over your notes, PDFs, or any text
-- Chroma as local, persistent DB
-- Easy to plug in OpenAI or local LLMs
+- 💾 **Local Vector Database with ChromaDB**  
+  Store your `.db` files locally, and the app will create a vectorized representation of your database schema and sample data.
+
+- 🤖 **LLM-Powered SQL Generation**  
+  Uses a local LLM (no API keys or internet required) to generate SQL queries from your natural language questions.
+
+- 🔍 **RAG-Based Querying**  
+  Retrieves relevant database information and context before generating a query, increasing accuracy and relevance.
+
+- 🔐 **Fully Local Execution**  
+  Privacy-focused — no external services or cloud dependencies.
+
+- ⚡ **Lightweight and Easy to Use**  
+  Simple UI to load databases, manage collections, and interact with your data using a chat interface.
+
 
 ## Usage
 1. **Install Ollama (for Local LLM Inference)**
@@ -34,11 +48,79 @@ A lightweight RAG-based assistant using ChromaDB as a local vector store and Sen
    ollama pull codellama:13b-instruct
    ```
 
-3. Put your `.txt`,`.db`, `.pdf` files into `data/`
-4. Run the app by typing
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the App**
+
+   You have two options for running the application:
+
+   ### Option A: Standard Streamlit Command
+
+   Run the app directly with Streamlit:
+
    ```bash
    streamlit run app.py
    ```
+
+   ### Option B: Use a Shell Script
+
+   Make the ```run.sh``` script executable
+   ```bash
+   chmod +x run.sh
+   ```
+
+   Then run the app with:
+   ```bash
+   ./run.sh
+   ```
+
+---
+
+## Python Environment Setup (Recommended: pyenv)
+
+To ensure you're using the correct Python version and avoid dependency issues:
+
+### Create a Python 3.10+ virtual environment using `pyenv`
+Follow the official pyenv installation guide to install and manage Python versions:<br />
+Official Documentation: [Visit pyenv GitHub](https://github.com/pyenv/pyenv)
+
+
+### Create and activate a virtual environment in the project folder
+```bash
+python -m venv myenv
+source myenv/bin/activate
+```
+
+---
+
+## Getting Started with the Text-to-SQL app
+This guide will walk you through how to set up and use the application interface to generate SQL queries from natural languages.
+
+### Step-by-Step Instructions
+
+1. **Place Your DB Files**  
+   Put your `.db` files into the `data/` folder of the project.
+
+2. **Load a DB File into the Vector Database**
+   - Open the app.
+   - On the **top left sidebar**, select a `.db` file.
+   - Click the **'Upload'** button.
+   - This action creates a collection for your selected DB file in your local vector database.
+
+3. **Select a Collection for Text-to-SQL**
+   - On the **bottom left sidebar**, choose the collection you want to use.
+   - After selecting it, you're ready to ask questions.
+
+4. **Start Chatting**
+   - Type your natural language query into the chatbox.
+   - The app will generate the corresponding SQL query using the selected database collection.
+
+You are all set! Start exploring your databases with natural language queries.
+
+---
 
 
 # High-Level Workflow: Retrieval-Augmented Generation (RAG)
@@ -87,51 +169,4 @@ This project uses a modular RAG pipeline to generate SQL queries based on user q
    - The final SQL query is returned to `app.py`
    - Optionally executed or displayed to the user
 
----
 
-## Component Relationship Diagram
-
-```text
-app.py
- ├── SQLSchemaManager
- │    └── loads and embeds schema into Chroma
- ├── ChromaDBManager
- │    └── creates and manages Chroma collections
- └── RAGPipeline
-      ├── RAGRetriever → gets relevant schema
-      ├── PromptBuilder → builds the final prompt
-      └── RAGGenerator → generates the SQL
-
-```
----
-
-## Python Environment Setup (Recommended: pyenv)
-
-To ensure you're using the correct Python version and avoid dependency issues:
-
-### 🔧 Create a Python 3.12 virtual environment using `pyenv`
-
-```bash
-# Install pyenv if you haven't already
-curl https://pyenv.run | bash
-
-# Restart your shell and ensure pyenv is initialized
-# (add these lines to ~/.bashrc or ~/.zshrc)
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-source ~/.bashrc  # or ~/.zshrc
-
-# Install Python 3.12.2
-pyenv install 3.12.2
-
-# Set Python 3.12.2 as the version for this project
-pyenv local 3.12.2
-
-# Create and activate a virtual environment
-python -m venv myenv
-source myenv/bin/activate
-
-# Install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
