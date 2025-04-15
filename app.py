@@ -7,6 +7,7 @@ import random
 import string
 import subprocess
 from pathlib import Path
+import re
 
 
 # initialize objects so that we won't recreate copies while the app is running
@@ -195,6 +196,7 @@ for pair in reversed(grouped_messages):
     for message in pair:
         with st.chat_message(message["role"]):
             if message["role"] == "assistant":
-                st.code(message["text"], language="sql")
+                clean_sql = re.sub(r"```sql\s*|```", "", message["text"]).strip()
+                st.code(clean_sql, language="sql")
             else:
                 st.markdown(message["text"])
