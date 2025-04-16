@@ -9,3 +9,8 @@ __pycache__/
 
 # pycharm
 .idea/*
+
+# test folders
+tests/database
+
+data/testdata
