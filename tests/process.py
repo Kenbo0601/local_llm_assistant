@@ -7,8 +7,12 @@ import shutil
 '''
 - Extract database id, query, and question from train_spider.json which contains 7000+ set of query and questions
 To run this script from the project root: python3 -m tests.process
+
+- add_db(): add .sqlite files into data/testdata, and sql_manager added these files into chroma database
 '''
 
+# creates filtered json file and place it at the project directory 
+# I already added it into tests folder, so no need to run this function unless we modify something
 def parser():
     path = Path(__file__).resolve().parent / "train_spider.json"
     with open(path, "r") as f:
@@ -19,6 +23,7 @@ def parser():
 
     with open("filtered_spider.json", "w") as f:
         json.dump(extracted_data, f, indent=2)
+
 
 # add test database into data/testdata folder and chroma database
 def add_db():
@@ -40,7 +45,7 @@ def add_db():
             for sqlite_file in sqlite_files:
                 print(f"Processing: {sqlite_file.name}")
 
-                # copy to data/testdata
+                # copy to data/testdata - for testing, we prob don't need to add sqlite files in data folder 
                 dest_path = destination / sqlite_file.name
                 shutil.copy2(sqlite_file, dest_path)
                 try:
@@ -56,8 +61,6 @@ def add_db():
 if __name__ == "__main__":
 
     # 1: place database folder from spider in this tests dir
-    # 2: add .sqlite files into data/testdata 
-    # 3: use sql manager to add these database files into chroma database 
-    #add_db()
-    parser()
-    #manager = SQLSchemaManager("testdata") # create a test folder in data before creating manager object
+    # 2: run add_db() function - it adds sqlite files in data/testdata, and chroma database using sql manager
+    add_db()
+    #parser()
