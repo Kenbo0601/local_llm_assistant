@@ -25,9 +25,10 @@ toy_data = [
     }
 ]
 
-# TODO: I am going to split the tasks - first read filtered spider file, then generate llm response. save db_id, query, response in 
-# a file "testset.json" or something
-# then, create another function for testing the testset file - go into data/testdata and connect to corresponding sqlite files 
+#TODO: we can use spider evaluation.py for evaluating llm generated queries 
+# in spider, there is a dev_gold.sql file which has ground-truth queries. 
+# so we generate the same file format with db_id and llm generated query - name it dev_pred.sql 
+# then we can run evaluation.py in spider 
 def evaluate():
 
     manager = SQLSchemaManager()
