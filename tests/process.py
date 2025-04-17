@@ -38,6 +38,7 @@ def add_db():
     if not root_dir.exists():
         raise FileNotFoundError(f"Directory not found: {root_dir}")
 
+    manager = SQLSchemaManager("testdata") # create a test folder in data before creating manager object
     for subfolder in root_dir.iterdir():
         if subfolder.is_dir():
             # Look for the .sqlite file inside this subfolder
@@ -49,7 +50,6 @@ def add_db():
                 dest_path = destination / sqlite_file.name
                 shutil.copy2(sqlite_file, dest_path)
                 try:
-                    manager = SQLSchemaManager("testdata") 
                     docs = manager.load_schema(sqlite_file)
                     print(docs)
                     manager.create_collection(sqlite_file.name)
