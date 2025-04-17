@@ -2,6 +2,8 @@ import json
 from scripts.rag.rag_pipeline import Pipeline
 from scripts.managers.sql_manager import SQLSchemaManager
 import sqlite3
+from pathlib import Path
+import re
 
 # Read in filtered_spider.json 
 # use pipeline to query the same question from the same database for each block in the json file (db_id, query, question)
@@ -23,11 +25,15 @@ toy_data = [
     }
 ]
 
+# TODO: I am going to split the tasks - first read filtered spider file, then generate llm response. save db_id, query, response in 
+# a file "testset.json" or something
+# then, create another function for testing the testset file - go into data/testdata and connect to corresponding sqlite files 
 def evaluate():
 
     manager = SQLSchemaManager()
     pipeline = Pipeline()
     pipeline.change_model("qwen2.5-coder:7b") # change model for testing 
+    destination = Path(__file__).resolve().parent.parent / "data" / "testdata"
 
     for i in toy_data:
 
@@ -38,8 +44,21 @@ def evaluate():
         collection = manager.get_collection(db) # retrieve collection from chroma db
         pipeline.update_collection(collection)
         response = pipeline.run(question) # llm generated response 
+        llm_sql = re.sub(r"```sql\s*|```", "", response).strip()
+        print(llm_sql)
 
         #TODO: query results from corresponding db using query and response to see if the results are the same 
+        try:
+            conn = sqlite3.connect(str(destination) + "/" + db)
+            cursor = conn.cursor()
+            cursor.execute(llm_sql)
+            rows = cursor.fetchall()
+            for row in rows:
+                print(row)
+            conn.close()
+        except Exception as e:
+            print(f"  Error connecting to {db}: {e}")
+    
     return 
 
 
