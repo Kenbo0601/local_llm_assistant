@@ -10,15 +10,15 @@ To run this script from the project root: python3 -m tests.process
 '''
 
 def parser():
-    path = "train_spider.json"
+    path = Path(__file__).resolve().parent / "train_spider.json"
     with open(path, "r") as f:
         data = json.load(f)
 
     # Extract db_id, query, and question
     extracted_data = [{"db_id": item["db_id"], "query": item["query"], "question": item["question"]} for item in data]
 
-    for i in extracted_data:
-        print(i)
+    with open("filtered_spider.json", "w") as f:
+        json.dump(extracted_data, f, indent=2)
 
 # add test database into data/testdata folder and chroma database
 def add_db():
@@ -58,5 +58,6 @@ if __name__ == "__main__":
     # 1: place database folder from spider in this tests dir
     # 2: add .sqlite files into data/testdata 
     # 3: use sql manager to add these database files into chroma database 
-    add_db()
+    #add_db()
+    parser()
     #manager = SQLSchemaManager("testdata") # create a test folder in data before creating manager object
