@@ -5,9 +5,12 @@ import sqlite3
 
 class SQLSchemaManager(ChromaDBManager):
 
-    def __init__(self):
+    def __init__(self,dir_name=None):
         super().__init__()
-        self.data_path = self.base_path / "data" / "db"
+        if dir_name:
+            self.data_path = self.base_path / "data" / dir_name # for testing 
+        else:
+            self.data_path = self.base_path / "data" / "db"
 
     def load_schema(self, db_name):
         db_path = self.data_path / db_name

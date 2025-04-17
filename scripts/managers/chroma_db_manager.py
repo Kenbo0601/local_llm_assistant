@@ -11,7 +11,7 @@ class ChromaDBManager:
     def __init__(self):
         self.base_path = Path(__file__).resolve().parents[2] # get absolute path to project root (2 levels up from this file)
         self.db_path = str(self.base_path / "chroma_db") # chroma_db folder should be located in the top level - we also need to convert Path object -> str for later use
-        self.embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2") # sentence transformer model - this model is small and fast
+        self.embedding_function = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2",  model_kwargs={"device": "cpu"}) # sentence transformer model - this model is small and fast
         self.collections = {}
 
     # Create collection in chroma database with collection name - ex: pdf_chunks
