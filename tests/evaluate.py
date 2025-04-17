@@ -1,6 +1,7 @@
 import json 
 from scripts.rag.rag_pipeline import Pipeline
 from scripts.managers.sql_manager import SQLSchemaManager
+import sqlite3
 
 # Read in filtered_spider.json 
 # use pipeline to query the same question from the same database for each block in the json file (db_id, query, question)
