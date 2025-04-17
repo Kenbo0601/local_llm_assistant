@@ -14,7 +14,7 @@ To run this script from the project root: python3 -m tests.process
 # creates filtered json file and place it at the project directory 
 # I already added it into tests folder, so no need to run this function unless we modify something
 def parser():
-    path = Path(__file__).resolve().parent / "train_spider.json"
+    path = Path(__file__).resolve().parent / "dev.json"
     with open(path, "r") as f:
         data = json.load(f)
 
@@ -62,5 +62,5 @@ if __name__ == "__main__":
 
     # 1: place database folder from spider in this tests dir
     # 2: run add_db() function - it adds sqlite files in data/testdata, and chroma database using sql manager
-    add_db()
-    #parser()
+    #add_db()
+    parser()
