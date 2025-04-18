@@ -38,7 +38,9 @@ class PromptBuilder:
 
         prompt = f"""You are an AI assistant that translates natural language questions into SQL queries.
 
-        Only use the tables and columns provided below. Use JOINs if necessary. Do not explain the result — just return the SQL query.
+        Use the provided database schema to guide your answer. If some relevant tables or columns are not shown, do your best to infer the correct SQL based on the available information. 
+        
+        Use JOINs if necessary. Do not explain the result — just return the SQL query.
 
         ### Database Schema:
         {formatted_schema}
