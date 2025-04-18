@@ -123,50 +123,84 @@ You are all set! Start exploring your databases with natural language queries.
 ---
 
 
-# High-Level Workflow: Retrieval-Augmented Generation (RAG)
+# Spider Evaluation Report
 
-This project uses a modular RAG pipeline to generate SQL queries based on user questions and database schemas. Below is the step-by-step flow of how each component interacts:
+model - qwen2.5-coder:7b
+
+## Question Count per Difficulty
+
+| Metric | Easy | Medium | Hard | Extra | All |
+|--------|------|--------|------|-------|-----|
+| Count  | 250  | 440    | 174  | 170   | 1034 |
 
 ---
 
-## Step-by-Step Flow
+## Execution Accuracy
 
-1. **User Prompt (app.py)**
-   - The user selects a `.db` file (e.g. `sakila.db`)
-   - Enters a natural language question (e.g. *"List all customers who rented a film in 2022."*)
+| Metric     | Easy  | Medium | Hard  | Extra | All   |
+|------------|-------|--------|-------|--------|--------|
+| Execution  | 0.916 | 0.775  | 0.586 | 0.406  | 0.717  |
 
-2. **Schema Extraction (`SQLSchemaManager`)**
-   - Loads the schema from the SQLite file
-   - Formats each table/column as a text chunk
-   - Stores the schema as embeddings in ChromaDB under a named collection
+---
 
-3. **Collection Setup (`ChromaDBManager`)**
-   - Manages persistent Chroma collections
-   - Creates or retrieves collection by name
-   - Used by `SQLSchemaManager` and `RAGPipeline`
+## Exact Match Accuracy
 
-4. **RAG Orchestration (`RAGPipeline`)**
-   - Coordinates the RAG process:
-     - Retrieves relevant schema context
-     - Builds a custom prompt
-     - Calls an LLM to generate the SQL query
+| Metric       | Easy  | Medium | Hard  | Extra | All   |
+|--------------|-------|--------|-------|--------|--------|
+| Exact Match  | 0.608 | 0.334  | 0.293 | 0.012  | 0.340  |
 
-5. **Retrieval (`RAGRetriever`)**
-   - Uses Chroma to find the most relevant schema chunks
-   - Based on semantic similarity to the user question
+---
 
-6. **Prompt Construction (`PromptBuilder`)**
-   - Builds a prompt with:
-     - Retrieved schema context
-     - The user question
-   - Ensures the LLM gets structured input
+## Partial Matching Accuracy
 
-7. **LLM Generation (`RAGGenerator`)**
-   - Sends the prompt to a local or cloud-based LLM
-   - Returns a complete SQL query
+| Component        | Easy  | Medium | Hard  | Extra | All   |
+|------------------|-------|--------|-------|--------|--------|
+| select           | 0.977 | 0.953  | 0.943 | 0.619  | 0.945  |
+| select(no AGG)   | 0.977 | 0.953  | 0.966 | 0.810  | 0.958  |
+| where            | 0.927 | 0.897  | 0.623 | 0.333  | 0.805  |
+| where(no OP)     | 0.958 | 0.897  | 0.681 | 0.667  | 0.850  |
+| group(no Having) | 0.941 | 0.667  | 1.000 | 0.667  | 0.900  |
+| group            | 0.471 | 0.000  | 1.000 | 0.667  | 0.650  |
+| order            | 0.950 | 0.936  | 0.889 | 1.000  | 0.934  |
+| and/or           | 1.000 | 0.932  | 0.925 | 0.880  | 0.939  |
+| IUEN             | 0.000 | 0.000  | 0.750 | 0.000  | 0.667  |
+| keywords         | 0.962 | 0.954  | 0.733 | 0.619  | 0.887  |
 
-8. **Answer Return**
-   - The final SQL query is returned to `app.py`
-   - Optionally executed or displayed to the user
+---
+
+## Partial Matching Recall
+
+| Component        | Easy  | Medium | Hard  | Extra | All   |
+|------------------|-------|--------|-------|--------|--------|
+| select           | 0.668 | 0.373  | 0.471 | 0.076  | 0.412  |
+| select(no AGG)   | 0.668 | 0.373  | 0.483 | 0.100  | 0.418  |
+| where            | 0.824 | 0.438  | 0.467 | 0.051  | 0.452  |
+| where(no OP)     | 0.852 | 0.438  | 0.511 | 0.102  | 0.477  |
+| group(no Having) | 0.800 | 0.015  | 0.359 | 0.051  | 0.134  |
+| group            | 0.400 | 0.000  | 0.359 | 0.051  | 0.097  |
+| order            | 0.864 | 0.587  | 0.271 | 0.074  | 0.359  |
+| and/or           | 1.000 | 0.998  | 0.994 | 0.973  | 0.994  |
+| IUEN             | 0.000 | 0.000  | 0.143 | 0.000  | 0.077  |
+| keywords         | 0.853 | 0.336  | 0.362 | 0.076  | 0.380  |
+
+---
+
+## Partial Matching F1 Score
+
+| Component        | Easy  | Medium | Hard  | Extra | All   |
+|------------------|-------|--------|-------|--------|--------|
+| select           | 0.793 | 0.536  | 0.628 | 0.136  | 0.574  |
+| select(no AGG)   | 0.793 | 0.536  | 0.644 | 0.178  | 0.582  |
+| where            | 0.873 | 0.589  | 0.534 | 0.088  | 0.579  |
+| where(no OP)     | 0.902 | 0.589  | 0.584 | 0.177  | 0.611  |
+| group(no Having) | 0.865 | 0.030  | 0.528 | 0.094  | 0.233  |
+| group            | 0.432 | 1.000  | 0.528 | 0.094  | 0.168  |
+| order            | 0.905 | 0.721  | 0.416 | 0.138  | 0.518  |
+| and/or           | 1.000 | 0.964  | 0.958 | 0.924  | 0.966  |
+| IUEN             | 1.000 | 1.000  | 0.240 | 1.000  | 0.138  |
+| keywords         | 0.905 | 0.497  | 0.485 | 0.136  | 0.532  |
+
+
+
 
 

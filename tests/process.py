@@ -1,8 +1,10 @@
 from scripts.managers.sql_manager import SQLSchemaManager
+from scripts.rag.rag_pipeline import Pipeline
 import json 
 from pathlib import Path
 import sqlite3
 import shutil
+import re
 
 '''
 - Extract database id, query, and question from train_spider.json which contains 7000+ set of query and questions
@@ -10,6 +12,12 @@ To run this script from the project root: python3 -m tests.process
 
 - add_db(): add .sqlite files into data/testdata, and sql_manager added these files into chroma database
 '''
+
+def json_data(file_name):
+    path = Path(__file__).resolve().parent / file_name
+    with open(path, "r") as f:
+        data = json.load(f)
+    return data
 
 # creates filtered json file and place it at the project directory 
 # I already added it into tests folder, so no need to run this function unless we modify something
@@ -23,6 +31,36 @@ def parser():
 
     with open("filtered_spider.json", "w") as f:
         json.dump(extracted_data, f, indent=2)
+
+
+
+def generate_sql_testfile():
+
+    data = json_data("filtered_spider.json")
+
+    manager = SQLSchemaManager()
+    pipeline = Pipeline()
+    pipeline.change_model("qwen2.5-coder:7b") # change model for testing 
+    #destination = Path(__file__).resolve().parent.parent / "data" / "testdata"
+    destination = Path(__file__).resolve().parent
+
+    with open("dev_pred.sql", 'w') as f:
+        for i in data:
+
+            db = i["db_id"] + ".sqlite"
+            query = i["query"]
+            question = i["question"]
+
+            print(f"Processing {i["db_id"]}")
+
+            collection = manager.get_collection(db) # retrieve collection from chroma db
+            pipeline.update_collection(collection)
+            response = pipeline.run(question) # llm generated response 
+            llm_sql = re.sub(r"```sql\s*|```", "", response).strip()
+            print(llm_sql)
+            trimmed_llm_query = llm_sql.strip(";").replace('\n',' ')
+            f.write(f"{trimmed_llm_query}\t{i['db_id']}\n")
+
 
 
 # add test database into data/testdata folder and chroma database
@@ -63,4 +101,5 @@ if __name__ == "__main__":
     # 1: place database folder from spider in this tests dir
     # 2: run add_db() function - it adds sqlite files in data/testdata, and chroma database using sql manager
     #add_db()
-    parser()
+    #parser()
+    generate_sql_testfile()

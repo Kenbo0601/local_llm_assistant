@@ -29,27 +29,30 @@ toy_data = [
 # in spider, there is a dev_gold.sql file which has ground-truth queries. 
 # so we generate the same file format with db_id and llm generated query - name it dev_pred.sql 
 # then we can run evaluation.py in spider 
-def evaluate():
+def generate_sql_testfile():
 
     manager = SQLSchemaManager()
     pipeline = Pipeline()
     pipeline.change_model("qwen2.5-coder:7b") # change model for testing 
-    destination = Path(__file__).resolve().parent.parent / "data" / "testdata"
+    #destination = Path(__file__).resolve().parent.parent / "data" / "testdata"
+    destination = Path(__file__).resolve().parent
 
-    for i in toy_data:
+    with open("dev_pred.sql", 'w') as f:
+        for i in toy_data:
 
-        db = i["db_id"] + ".sqlite"
-        query = i["query"]
-        question = i["question"]
+            db = i["db_id"] + ".sqlite"
+            query = i["query"]
+            question = i["question"]
 
-        collection = manager.get_collection(db) # retrieve collection from chroma db
-        pipeline.update_collection(collection)
-        response = pipeline.run(question) # llm generated response 
-        llm_sql = re.sub(r"```sql\s*|```", "", response).strip()
-        print(llm_sql)
+            collection = manager.get_collection(db) # retrieve collection from chroma db
+            pipeline.update_collection(collection)
+            response = pipeline.run(question) # llm generated response 
+            llm_sql = re.sub(r"```sql\s*|```", "", response).strip()
+            print(llm_sql)
+            trimmed_llm_query = llm_sql.strip(";").replace('\n',' ')
+            f.write(f"{trimmed_llm_query}\t{i['db_id']}\n")
 
-        #TODO: query results from corresponding db using query and response to see if the results are the same 
-        try:
+        '''try:
             conn = sqlite3.connect(str(destination) + "/" + db)
             cursor = conn.cursor()
             cursor.execute(llm_sql)
@@ -58,10 +61,10 @@ def evaluate():
                 print(row)
             conn.close()
         except Exception as e:
-            print(f"  Error connecting to {db}: {e}")
+            print(f"  Error connecting to {db}: {e}")'''
     
     return 
 
 
 if __name__ == "__main__":
-    evaluate()
+    generate_sql_testfile()
