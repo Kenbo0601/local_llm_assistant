@@ -38,7 +38,7 @@ class PromptBuilder:
 
         prompt = f"""You are an AI assistant that translates natural language questions into SQL queries.
 
-        Use the provided database schema to guide your answer. If some relevant tables or columns are not shown, do your best to infer the correct SQL based on the available information. 
+        Use the provided database schema to guide your answer. If required tables or keys are not shown, you may infer their structure based on common patterns.
         
         Use JOINs if necessary. Do not explain the result — just return the SQL query.
 
