@@ -36,16 +36,16 @@ It uses a lightweight Retrieval-Augmented Generation (RAG) system built with Chr
    curl -fsSL https://ollama.com/install.sh | sh
    ```
 
-2. **Download Code LLaMA**
+2. **Download Ollama Models**
 
-   Pull the 7B Instruct model:
+   Pull code llama 7B Instruct model:
    ```bash
    ollama pull codellama:7b-instruct
    ```
 
-   You can also pull the 13B Instruct model (better performance, higher memory usage):
+   Pull Qwen2.5-coder 7b model (better performance based on our evaluation):
    ```bash
-   ollama pull codellama:13b-instruct
+   ollama pull qwen2.5-coder:7b
    ```
 
 3. **Install dependencies**
