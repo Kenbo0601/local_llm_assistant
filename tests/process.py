@@ -37,14 +37,16 @@ def parser():
 def generate_sql_testfile():
 
     data = json_data("filtered_spider.json")
+    model = "codellama:7b-instruct"
+    #model = "qwen2.5-coder:7b"
 
     manager = SQLSchemaManager()
     pipeline = Pipeline()
-    pipeline.change_model("qwen2.5-coder:7b") # change model for testing 
+    pipeline.change_model(model) # change model for testing 
     #destination = Path(__file__).resolve().parent.parent / "data" / "testdata"
     destination = Path(__file__).resolve().parent
 
-    with open("dev_pred.sql", 'w') as f:
+    with open("dev_pred_codellama.sql", 'w') as f:
         for i in data:
 
             db = i["db_id"] + ".sqlite"
