@@ -125,7 +125,44 @@ You are all set! Start exploring your databases with natural language queries.
 
 # Spider Evaluation Report
 
-model - qwen2.5-coder:7b
+**Model**: `qwen2.5-coder:7b`  
+**Evaluation Tool**: [test-suite-sql-eval](https://github.com/taoyds/test-suite-sql-eval.git)
+
+## How the Testing Works
+
+The evaluation measures how accurately a language model can translate natural language questions into SQL queries. It compares the model's output to the correct (gold) SQL queries using three main methods:
+
+### Execution Accuracy
+- Checks whether the **generated SQL returns the same result** as the gold SQL when run on the database.
+- This is the most practical metric for real-world applications.
+
+### Exact Match Accuracy
+- Compares whether the generated SQL is **structurally identical** to the gold SQL.
+- Sensitive to formatting, aliasing, and clause order — even if functionally correct.
+
+### Partial Match Evaluation
+Breaks the query into components and compares them individually:
+- **SELECT**
+- **WHERE**
+- **GROUP BY**
+- **ORDER BY**
+- **AND/OR logic**
+- **Set operations (IUEN)**: INTERSECT, UNION, EXCEPT, NOT IN
+- Also includes versions that ignore aggregations or operators for more flexibility
+
+Each component is scored by:
+- **Precision** (does the generated part include valid elements?)
+- **Recall** (did the model miss important parts?)
+- **F1 score** (harmonic mean of precision and recall)
+
+### Difficulty Levels
+Each question is labeled as `easy`, `medium`, `hard`, or `extra` based on the complexity of the SQL needed:
+- `easy`: single-table, no joins
+- `medium`: joins or simple aggregation
+- `hard`: subqueries, nested conditions
+- `extra`: multiple joins, nested queries, set operations
+
+---
 
 ## Question Count per Difficulty
 
