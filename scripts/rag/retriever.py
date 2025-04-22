@@ -11,7 +11,7 @@ Responsibilities:
 
 class Retriever:
 
-    def __init__(self, collection, top_k: int = 6):
+    def __init__(self, collection, top_k: int = 10):
         """
         Initialize the retriever with a Chroma collection.
         
@@ -44,5 +44,26 @@ class Retriever:
         # then we can do something like this; retriever = self.collection.as_retriever(search_kwargs={"k": 3, "filter": {"table": table_filter}})
         self.retriever = self.collection.as_retriever(search_kwargs={"k": self.top_k})
         documents = self.retriever.invoke(question)
-        return [doc.page_content for doc in documents] 
+        seen_tables = set()
+        unique_chunks = []
+
+        for doc in documents:
+            content = doc.page_content
+
+            # Extract table name using simple parsing (assumes format: "Table: name")
+            if "Table:" in content:
+                table_line = next(line for line in content.splitlines() if line.startswith("Table:"))
+                table_name = table_line.replace("Table:", "").strip().lower()
+            else:
+                continue  # skip if table name can't be found
+
+            if table_name not in seen_tables:
+                seen_tables.add(table_name)
+                unique_chunks.append(content)
+
+            if len(unique_chunks) == self.top_k:
+                break
+        
+        return unique_chunks
+        #return [doc.page_content for doc in documents] 
     
