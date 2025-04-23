@@ -35,6 +35,7 @@ class PromptBuilder:
             return "\n".join(formatted)
 
         formatted_schema = "\n\n".join(format_chunks(chunk) for chunk in context_chunks)
+        print(formatted_schema)
 
         prompt = f"""You are an AI assistant that translates natural language questions into SQL queries.
 
