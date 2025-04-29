@@ -15,12 +15,11 @@ Responsibilities:
 # so that when user selects ollama model, we call ChatOllama method from langchain 
 class Generator:
 
-    def __init__(self, model_name="codellama:7b-instruct", temperature=0.2):
+    def __init__(self, temperature=0.2):
         #self.llm = ChatOllama(model=model_name, temperature=temperature)
         self.llm = None
         self.temperature = temperature
         self.model_name = None
-        self.set_model(model_name)
 
     # Make sure if model is available in the system 
     def _is_model_available(self, model_name: str) -> bool:
