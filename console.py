@@ -12,6 +12,16 @@ selected_collection = None
 
 invalid_arg_message = "Invalid argument. Please enter a valid argument."
 
+print("===== RAG SQL Console =====")
+print("Available commands")
+print("exit\n\tQuit and exit the program.")
+print("list models\n\tList all available models.")
+print("list collections\n\tList all available collections.")
+print("list selected\n\tView selected model and collection.")
+print("select model <model name>\n\tSelect the model to use.")
+print("select collection <collection name>\n\tSelect the collection to use.")
+print("query <query>\n\tQuery the model.")
+
 while True:
     user_input = str(input(">>")).lower().strip()
 
@@ -72,10 +82,10 @@ while True:
                 print("Could not find collection", user_input.split()[2])
     elif user_input.split()[0] == "query":  # Sends a query to the LLM
         if selected_model is None:  # Check if a model is selected
-            print("Select a model first using \"select <model name>\".")
+            print("Select a model first using \"select model <model name>\".")
             continue
         if selected_collection is None:   # Check if a collection is selected
-            print("Select a collection first using \"select <collection name>\".")
+            print("Select a collection first using \"select collection <collection name>\".")
             continue
         if len(user_input.split()) < 2: # Print a message to let the user know they have to write a query
             print("Write a query after the query command with \"select query <query>\"")
