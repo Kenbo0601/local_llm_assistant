@@ -140,8 +140,8 @@ with st.sidebar:
 st.markdown(
     """
     <div style='text-align: center;'>
-        <h1>Personal LLM Assistant</h1>
-        <h3>💬 Ask me anything about your codebase or database</h3>
+        <h1>Text2SQL Local Engine</h1>
+        <h3>✍️ Type your SQL question here</h3>
     </div>
     """,
     unsafe_allow_html=True
