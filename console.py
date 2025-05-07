@@ -15,6 +15,7 @@ invalid_arg_message = "Invalid argument. Please enter a valid argument."
 print("===== RAG SQL Console =====")
 print("Available commands")
 print("exit\n\tQuit and exit the program.")
+print("load collections\n\tAdds all documents from /data/db into schema collections.")
 print("list models\n\tList all available models.")
 print("list collections\n\tList all available collections.")
 print("list selected\n\tView selected model and collection.")
@@ -32,6 +33,7 @@ while True:
         break
     elif user_input == "help":  # List available commands in the console
         print("exit\n\tQuit and exit the program.")
+        print("load collections\n\tAdds all documents from /data/db into schema collections.")
         print("list models\n\tList all available models.")
         print("list collections\n\tList all available collections.")
         print("list selected\n\tView selected model and collection.")
@@ -94,6 +96,18 @@ while True:
         pipeline.update_collection(selected_collection)
         result = pipeline.run(" ".join(user_input.split()[1:]), verbose=False)
         print(re.sub(r"```sql\s*|```", "", result).strip())
+    elif user_input == "load collections":  # Add .db files from /data into schema collections
+        for collection_file in utils.get_documents():
+            collection = collection_file.split("/")[1]
+
+            if collection[-3:] != ".db":
+                continue
+
+            docs = schema_manager.load_schema(collection)
+            schema_manager.create_collection(collection)
+            schema_manager.add_schema_to_collection(collection, docs)
+
+        print("Finished adding documents to schema collection.")
     else:
         print(invalid_arg_message)
 
