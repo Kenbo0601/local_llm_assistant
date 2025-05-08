@@ -34,13 +34,14 @@ class Pipeline:
     def change_model(self, new_model_name):
         self.generator.set_model(new_model_name)
     
-    def run(self, user_question) -> str:
+    def run(self, user_question, verbose = True) -> str:
         # 1: retriever finds and returns relavant data
         context_chunks = self.retriever.retrieve_context(user_question)
-        for i, chunk in enumerate(context_chunks):
-            print(f"chunk{i}:\n{chunk}\n")
+        if verbose:
+            for i, chunk in enumerate(context_chunks):
+                print(f"chunk{i}:\n{chunk}\n")
 
         # 2: build prompt for LLM 
-        prompt = self.prompt_builder.build_sql_prompt(user_question, context_chunks)
+        prompt = self.prompt_builder.build_sql_prompt(user_question, context_chunks, verbose=verbose)
 
         return self.generator.generate_sql(prompt)

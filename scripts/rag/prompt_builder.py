@@ -13,7 +13,7 @@ class PromptBuilder:
     def __init__(self):
         self.keywords = ["Columns:", "Foreign Keys:"]
  
-    def build_sql_prompt(self, user_question: str, context_chunks: list[str]) -> str: 
+    def build_sql_prompt(self, user_question: str, context_chunks: list[str], verbose = True) -> str:
 
         # format each table and its columns 
         def format_chunks(chunk: str) -> str:
@@ -35,7 +35,8 @@ class PromptBuilder:
             return "\n".join(formatted)
 
         formatted_schema = "\n\n".join(format_chunks(chunk) for chunk in context_chunks)
-        print(formatted_schema)
+        if verbose:
+            print(formatted_schema)
 
         prompt = f"""You are an AI assistant that translates natural language questions into SQL queries.
 

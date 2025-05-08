@@ -1,14 +1,8 @@
-# script for UI/user interaction 
-from scripts.rag.retriever import Retriever
 from scripts.managers.sql_manager import SQLSchemaManager
 from scripts.rag.rag_pipeline import Pipeline
 import streamlit as st
-import random
-import string
-import subprocess
-from pathlib import Path
+import scripts.util.utils as utils
 import re
-
 
 # initialize objects so that we won't recreate copies while the app is running
 if "pipeline" not in st.session_state:
@@ -16,43 +10,6 @@ if "pipeline" not in st.session_state:
 
 if "schema_manager" not in st.session_state:
     st.session_state.schema_manager = SQLSchemaManager()
-
-
-
-# ─────────────────────────────
-#  Functions 
-# ─────────────────────────────
-
-# Retrieve ollama models from user's system
-def get_ollama_models():
-    try:
-        result = subprocess.run(["ollama", "list"], capture_output=True, text=True, check=True)
-        models = []
-        for line in result.stdout.strip().split("\n")[1:]:  # Skip header
-            if line.strip():
-                model_name = line.split()[0]
-                models.append(model_name)
-        return models
-    except Exception as e:
-        st.error(f"Error retrieving Ollama models: {e}")
-        return []
-
-
-# Go into data folder and grab documents
-def display_documents():
-    # Root data folder
-    data_folder = Path("data")
-
-    # Recursively find all .db and .pdf files
-    file_types = ["*.db", "*.pdf"]
-    all_files = []
-    for pattern in file_types:
-        all_files.extend(data_folder.glob(f"**/{pattern}"))
-
-    # Display files as relative paths (e.g., "db/sakila.db")
-    file_labels = [str(f.relative_to(data_folder)) for f in all_files]
-    return file_labels
-
 
 # for sidebar - section 1
 def create_collection_wrapper(doc):
@@ -109,7 +66,7 @@ with st.sidebar:
     st.caption("Let’s add new documents into your system!")
 
     with st.form(key="load_doc_form"):
-        load_doc = st.selectbox("Select Document", display_documents())
+        load_doc = st.selectbox("Select Document", utils.get_documents())
         load_submitted = st.form_submit_button("Upload")
         if load_submitted:
             create_collection_wrapper(load_doc)
@@ -123,7 +80,7 @@ with st.sidebar:
     if collection_name:
         st.success(f"Selected collection: {collection_name}")
     # Get available models
-    ollama_models = get_ollama_models()
+    ollama_models = utils.get_ollama_models()
 
     # Display them in a selectbox
     if ollama_models:
